@@ -54,7 +54,7 @@ rstan_options(auto_write = TRUE)
 
 #Code:
 
-#Functions
+#Functions that are reused in multiple files
 source(paste0(path,"/functions.R"))
 
 #Prepare the sea level data
