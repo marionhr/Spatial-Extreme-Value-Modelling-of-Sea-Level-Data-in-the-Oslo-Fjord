@@ -200,16 +200,6 @@ find_data <- function(directory){
   return(list("data"=data, "parameters"=data_parameters))
 }
 
-find_cv_data <- function(directory){
-  #extract the parameter estimates found with cross validation of 
-  #four locations
-  ###################################################################
-  the_data <- find_data(directory)
-  the_data$data$q.4 <- lapply(read.table(file=paste0(path, "/../Results/",directory,"/samples_q.xml")), as.numeric)$x
-  the_data$data$lns.4 <- lapply(read.table(file=paste0(path, "/../Results/",directory,"/samples_lns.xml")), as.numeric)$x
-  return(the_data)
-}
-
 find_univariate_data <- function(directory, location_index){
   #extract the parameter estimates of the univariate model
   ###################################################################
@@ -257,5 +247,35 @@ make_covariate_matrix <- function(locations){
   return(covariate_matrix)
 }
 
+#####################################################################
+
+find_distances <- function(locations){
+  #find distances between locations
+  #input: data frame with longitude and latitude as columns
+  #output: distance matrix
+  ###################################################################
+  names(locations)
+  names(simulated_locations)
+  latitude_name <- {if(is.element("lat",names(locations))) "lat" else "latitude"}
+  longitude_name <- {if(is.element("long",names(locations))) "long" else "longitude"}
+  
+  locations.sf = st_as_sf(locations,coords = c(longitude_name,latitude_name),
+                          crs="+init=epsg:4326 +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs+towgs84=0,0,0")
+  transformed.locations.sf <- st_transform(locations.sf, crs = CRS("+proj=utm +zone=32 +datum=WGS84"))
+  distances <- as.matrix(st_distance(transformed.locations.sf))
+  distances #units m
+  distances <- distances/(10^3)  #unit km
+  units(distances) <- NULL
+  return(distances)
+}
+
+#########################################################################
+
+date_to_year <- function(data){
+  #input: data frame with columns for: year, month, day and hour
+  #output: list of years with decimals representing the month, day and hour
+  ###########################################################################
+  return(data$year+1/(as.numeric(strftime(paste0(data$year,"-",12,"-",31),format="%j")))*(as.numeric(strftime(paste0(data$year, "-",data$month,"-",data$day),format="%j"))+data$hour*(1/24)))
+}
 
 

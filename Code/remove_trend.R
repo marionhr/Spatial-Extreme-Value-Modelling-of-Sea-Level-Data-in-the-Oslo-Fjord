@@ -4,11 +4,10 @@
 
 #Remove the trend by quadratic regression
 
-date_to_year <- function(data){
-  return(data$year+1/(as.numeric(strftime(paste0(data$year,"-",12,"-",31),format="%j")))*(as.numeric(strftime(paste0(data$year, "-",data$month,"-",data$day),format="%j"))+data$hour*(1/24)))
-}
-
 remove_trend <- function(data_trend){
+  #input: data frame with columns: year, month, day, hour, min, sea level and tide
+  #output: the same data frame with the trend in the sea level column removed by quadratic regression
+  #####################################################################################################
   df <- data.frame(x = date_to_year(data_trend),
                    y = data_trend$sealevel)
   df$x <- df$x-min(df$x)
@@ -26,7 +25,7 @@ remove_trend <- function(data_trend){
   return(data)
 }
 
-
+#Remove trend at the four locations
 Helgeroa_Data_full <- remove_trend(Helgeroa_Data_trend)
 Oscarsborg_Data_full <- remove_trend(Oscarsborg_Data_trend)
 Oslo_Data_full <- remove_trend(Oslo_Data_trend)

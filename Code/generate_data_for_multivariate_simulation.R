@@ -16,18 +16,10 @@ if (dim>4){
 
 names(simulated_locations) <- names(sorted_norwegian_coast_data)
 simulated_locations$location <- seq(1,dim)
-simulated_locations$lat <- as.numeric(simulated_locations$lat)
-simulated_locations$long <- as.numeric(simulated_locations$long)
+simulated_locations$lat <- as.numeric(as.character(simulated_locations$lat))
+simulated_locations$long <- as.numeric(as.character(simulated_locations$long))
 
-simulated_locations.sf = st_as_sf(simulated_locations,coords = c("long","lat"),
-                        crs="+init=epsg:4326 +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs+towgs84=0,0,0")
-transformed.simulated_locations.sf <- st_transform(simulated_locations.sf, crs = CRS("+proj=utm +zone=32 +datum=WGS84"))
-simulated_distances <- as.matrix(st_distance(transformed.simulated_locations.sf))
-simulated_distances  # unit m
-simulated_distances <- simulated_distances/(10^3)  # unit km
-units(simulated_distances) <- NULL
-
-
+simulated_distances <- find_distances(simulated_locations)
 
 #parameter values:
 xi <- -0.05

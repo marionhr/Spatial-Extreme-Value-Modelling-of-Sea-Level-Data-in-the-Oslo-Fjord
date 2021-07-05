@@ -29,7 +29,7 @@ Helgeroa_Data_trend <- left_join(Helgeroa_Data_trend, Helgeroa_tide)
 Helgeroa_Data_trend <- full_join(Nevlunghavn_sealevel_1927_1966, Helgeroa_Data_trend, by=c("year", "month", "day", "hour", "min"))
 Helgeroa_Data_trend$sealevel.y[which(!is.na(Helgeroa_Data_trend$sealevel.x) & !is.na(Helgeroa_Data_trend$sealevel.y))] <- rep(NA,length(which(!is.na(Helgeroa_Data_trend$sealevel.x) & !is.na(Helgeroa_Data_trend$sealevel.y))))
 Helgeroa_Data_trend <- Helgeroa_Data_trend %>% unite("sealevel", sealevel.x:sealevel.y, na.rm = TRUE, remove = TRUE)
-Helgeroa_Data_trend$sealevel <- as.numeric(Helgeroa_Data_trend$sealevel)
+Helgeroa_Data_trend$sealevel <- as.numeric(as.character(Helgeroa_Data_trend$sealevel))
 Helgeroa_Data_trend <- Helgeroa_Data_trend %>% arrange(year, month, day, hour)
 
 ###################################################################################
@@ -98,22 +98,14 @@ Viker_Data_trend <- left_join(Viker_sealevel_1990_2020, Viker_tide)
 
 ###################################################################################
 
-#Location:
+#Find GPS coordinates and distance matrix:
 
+#Location:
 locations <- read.table(paste0(path,"/../Data/location.txt"),
                         col.names = c("location","code","latitude","longitude"))
-
 locations <- locations[c(1:3,5),]
 locations
 
-
 #Find distances:
-
-locations.sf = st_as_sf(locations,coords = c("longitude","latitude"),
-                        crs="+init=epsg:4326 +proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs+towgs84=0,0,0")
-transformed.locations.sf <- st_transform(locations.sf, crs = CRS("+proj=utm +zone=32 +datum=WGS84"))
-distances <- as.matrix(st_distance(transformed.locations.sf))
-distances #units m
-distances <- distances/(10^3)  #unit km
-units(distances) <- NULL
+distances <- find_distances(locations)
 distances

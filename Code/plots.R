@@ -1,8 +1,5 @@
 #!/usr/bin/env Rscript
 
-date_to_year <- function(data){
-  return(data$year+1/(as.numeric(strftime(paste0(data$year,"-",12,"-",31),format="%j")))*(as.numeric(strftime(paste0(data$year, "-",data$month,"-",data$day),format="%j"))+data$hour*(1/24)))
-}
 
 plot_data <- function(data, trend_data, location){
   #plot the data with trend

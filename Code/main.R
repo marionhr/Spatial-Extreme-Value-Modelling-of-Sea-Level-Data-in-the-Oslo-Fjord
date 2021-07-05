@@ -1,8 +1,8 @@
 #!/usr/bin/env Rscript
 
 #the path:
-path <- "C:/Users/mario/Git/Master_Spatial_Extreme_Value_Modelling/Code"
-path <- "/home/shomeb/m/marionhr/Master_Spatial_Extreme_Value_Modelling/Code"
+path <- "C:/Users/mario/Git/Spatial-Extreme-Value-Modelling-of-Sea-Level-Data-in-the-Oslo-Fjord/Code"
+path <- "/home/shomeb/m/marionhr/Spatial-Extreme-Value-Modelling-of-Sea-Level-Data-in-the-Oslo-Fjord/Code"
 
 #libraries:
 library(tidyverse)
@@ -83,6 +83,12 @@ source(paste0(path,"/return_levels.R"))
 source(paste0(path,"/map.R"))
 
 
+#Stan files:
+#reparametrized_GEV.stan                    #Parameter estimation for the multivariate/spatial model
+#reparametrized_GEV_common_xi.stan          #Parameter estimation for the model where the xi is the only GEV parameter with a spatial representation
+#reparametrized_GEV_univariate.stan         #Parameter estimation for the univariate model
+
+
 #Other files:
 #source(paste0(path,"/covariate_data.R"))   #Preparation of the covariate data for analysis
 #source(paste0(path,"/norwegian_coast.R"))  #Preparation of GPS coordinates for the Oslo Fjord
@@ -90,5 +96,8 @@ source(paste0(path,"/map.R"))
 #source(paste0(path,"/print_results.R"))    #Prints out some useful information used in the thesis
 
 
+
 #Install Packages
 #install.packages(c("tidyverse","ggplot2","forecast","ggpubr","mev","ismev","extRemes","lubridate","nleqslv","latex2exp","scales","matlib","evd","hexbin","spatstat","patchwork","mvtnorm","copula","evd","dplyr","geosphere","geoR","sf","sp","scoringRules","fhidata","robustbase","raster","rgdal","purrr","gridExtra","patchwork","geoR","Rfast","ncdf4","raster","rgdal ","ggrepel","fields"))
+#Sys.setenv(DOWNLOAD_STATIC_LIBV8 = 1) # only necessary for Linux without the nodejs library / headers
+#install.packages("rstan", repos = "https://cloud.r-project.org/", dependencies = TRUE)

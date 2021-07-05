@@ -1,6 +1,12 @@
 #!/usr/bin/env Rscript
 
+#Remove the years that are missing more than 3 months of data
+
 remove_years_with_missing_data <- function(data){
+  #input: data frame with the trend removed
+  #output: data frame without the years with missing data removed
+  ################################################################
+  
   missing_data <- tibble(year=numeric(),
                          month=numeric(),
                          day=numeric(),
@@ -70,7 +76,7 @@ remove_years_with_missing_data <- function(data){
   return(data)
 }
 
-
+#Find data frames without missing data:
 Helgeroa_Data <- remove_years_with_missing_data(Helgeroa_Data_full)
 Oscarsborg_Data <- remove_years_with_missing_data(Oscarsborg_Data_full)
 Oslo_Data <- remove_years_with_missing_data(Oslo_Data_full)
