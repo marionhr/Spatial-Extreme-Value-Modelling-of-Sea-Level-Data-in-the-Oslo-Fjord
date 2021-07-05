@@ -97,7 +97,14 @@ source(paste0(path,"/map.R"))
 
 
 
-#Install Packages
+#Install Packages:
 #install.packages(c("tidyverse","ggplot2","forecast","ggpubr","mev","ismev","extRemes","lubridate","nleqslv","latex2exp","scales","matlib","evd","hexbin","spatstat","patchwork","mvtnorm","copula","evd","dplyr","geosphere","geoR","sf","sp","scoringRules","fhidata","robustbase","raster","rgdal","purrr","gridExtra","patchwork","geoR","Rfast","ncdf4","raster","rgdal ","ggrepel","fields"))
+
+#Stan:
 #Sys.setenv(DOWNLOAD_STATIC_LIBV8 = 1) # only necessary for Linux without the nodejs library / headers
 #install.packages("rstan", repos = "https://cloud.r-project.org/", dependencies = TRUE)
+
+#fhidata
+#install.packages("devtools")
+#require(devtools)
+#install_version("fhidata", version = "2019.8.27", repos = "http://cran.us.r-project.org")

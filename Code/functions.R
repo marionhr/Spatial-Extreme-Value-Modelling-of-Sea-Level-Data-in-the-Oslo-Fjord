@@ -68,6 +68,25 @@ create_corr_mat <- function(distance_matrix, range, nu) {
 #name: list of parameter names to make plots for
 #prior_x + prior_y: the prior distributions to compare the histograms to
 
+histogram_of_results <- function(data, name, value=NA, prior_x=NA, prior_y=NA){
+  #function for "function overloading", 
+  #one can call this function to run all possible options of histogram functions
+  ##############################################################################
+  if (is.na(value)){
+    if(is.na(prior_x)){
+      return(hist_plot_no_real_value(data,name))
+    }else{
+      return(hist_plot_no_real_value_with_priors(data, name, prior_x, prior_y))
+    }
+  }else{
+    if(is.na(prior_x)){
+      return(hist_plot(data, value, name))
+    }else{
+      return(hist_plot_with_priors(data, value, name, prior_x, prior_y))
+    }
+  }
+}
+
 hist_plot <- function(data, value, name){
   plt <- ggplot()+
     geom_histogram(aes(x=get(name, data),y=..density..))+
