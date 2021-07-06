@@ -2,7 +2,9 @@
 
 set.seed(10)
 
-#STAN:
+#Find parameter estimates for simulated data using the GEV model with a xi parameter that varies in space, while the q and lns are independent
+
+#prepare for STAN:
 GEV_dat <- list(dim = dim,
                 N = sum(s),
                 x = X_vec,
@@ -11,13 +13,14 @@ GEV_dat <- list(dim = dim,
                 beta = beta,
                 xi_limits = c(-0.5,0.5))
 
-
+#fit STAN
 fit <- stan(file = paste0(path, "/reparametrized_GEV_common_xi.stan"), 
             data = GEV_dat,
             iter = 2*10^3,
-            control = list(adapt_delta = 0.9,#0.995,
-                           max_treedepth = 10))#20))
+            control = list(adapt_delta = 0.9,
+                           max_treedepth = 10))
 
+#save results
 data_q_alpha <- rstan::extract(fit, pars = c("q"))
 data_lns_beta <- rstan::extract(fit, pars = c("lns"))
 data_xi <- rstan::extract(fit, pars = c("xi"))
@@ -33,8 +36,8 @@ write.table(data_xi, file=paste0(path, "/../Results/Simulated_Data_common_xi/dat
 saveRDS(data_parameters, file=paste0(path, "/../Results/Simulated_Data_common_xi/data_parameters.xml"))
 saveRDS(data_original_parameters, file=paste0(path, "/../Results/Simulated_Data_common_xi/data_original_parameters.xml"))
 
-print(fit, probs=c(0.025, 0.5, 0.975))
 
+#plots
 stan_trace(fit, inc_warmup = TRUE, nrow=3, 
            pars = c("xi",
                     "q",
@@ -57,6 +60,8 @@ pairs(fit, pars = c("xi",
 dev.off()
 
 
+################################################################################
+################################################################################
 
 #load results
 data_q_alpha <- read.table(file=paste0(path, "/../Results/Simulated_Data_common_xi/data_q_alpha.xml"))
@@ -68,17 +73,8 @@ data_original_parameters <- readRDS(paste0(path, "/../Results/Simulated_Data_com
 data <- c(data_q_alpha, data_lns_beta, data_xi)
 data <- as.data.frame(data)
 
-print("results")
-for (name in names(data)){
-  cat(name, mean(get(name, data)),"\n")
-}
 
-#Plot
-
-#parameters:
-data_set <- data
-data_set <- as.data.frame(data_set)
-
+#priors
 prior_x <- list("q.1"=seq(min(data$q.1),max(data$q.1),0.1),
                 "q.2"=seq(min(data$q.2),max(data$q.2),0.1),
                 "q.3"=seq(min(data$q.3),max(data$q.3),0.1),
@@ -88,7 +84,6 @@ prior_x <- list("q.1"=seq(min(data$q.1),max(data$q.1),0.1),
                 "lns.3"=seq(min(data$lns.3),max(data$lns.3),0.01),
                 "lns.4"=seq(min(data$lns.4),max(data$lns.4),0.01),
                 "xi"=seq(-10,10,0.01))
-
 prior_y <- list("q.1"=dnorm(prior_x$q.1, 100, 50),
                 "q.2"=dnorm(prior_x$q.2, 100, 50),
                 "q.3"=dnorm(prior_x$q.3, 100, 50),
@@ -98,12 +93,11 @@ prior_y <- list("q.1"=dnorm(prior_x$q.1, 100, 50),
                 "lns.3"=dnorm(prior_x$lns.3, 0, 10),
                 "lns.4"=dnorm(prior_x$lns.4, 0, 10),
                 "xi"=dnorm(prior_x$xi, 0, 10))
-
 prior_x$xi <- data_parameters$xi_limits[1]+(data_parameters$xi_limits[2]-data_parameters$xi_limits[1])*exp(prior_x$xi)/(1+exp(prior_x$xi))
-#y_values_prior <- as.data.frame(y_values_prior)
 
+#parameter names:
 parameter_names <- c(paste0("q.",1:4),paste0("lns.",1:4),"xi")
-names(data_set) <- parameter_names
+names(data) <- parameter_names
 names(prior_x) <- parameter_names
 names(prior_y) <- parameter_names
 parameter_set <-  setNames(c(data_original_parameters$q_alpha,
@@ -111,7 +105,8 @@ parameter_set <-  setNames(c(data_original_parameters$q_alpha,
                              data_original_parameters$xi),
                            parameter_names)
 
-plots <- map(parameter_names, ~hist_plot_with_priors(data_set, as.data.frame(t(parameter_set)), .x, prior_x, prior_y))
+#plot histograms
+plots <- map(parameter_names, ~hist_plot_with_priors(data, as.data.frame(t(parameter_set)), .x, prior_x, prior_y))
 ggarrange(plotlist=plots[9], ncol=1, nrow = 1)+
   ggsave(paste0(path, "/../Plots/Simulated_Data_common_xi/hist_with_real_xi.pdf"),
          width = 10*1/4, height = 8*1/4, units = c("in"))

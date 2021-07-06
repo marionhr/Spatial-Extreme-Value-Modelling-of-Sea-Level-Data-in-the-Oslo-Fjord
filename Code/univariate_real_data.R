@@ -98,7 +98,7 @@ load_real_results_function <- function(location_name){
                   "xi"=dnorm(prior_x$xi, 0, 10))
   prior_x$xi <- data_parameters$xi_limits[1]+(data_parameters$xi_limits[2]-data_parameters$xi_limits[1])*exp(prior_x$xi)/(1+exp(prior_x$xi))
   
-  #rename the data frames and list
+  #rename the data frames and lists
   names(data) <- parameter_names
   names(prior_x) <- parameter_names
   names(prior_y) <- parameter_names

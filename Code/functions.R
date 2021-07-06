@@ -233,7 +233,6 @@ find_univariate_data <- function(directory, location_index){
   return(list("data"=data, "parameters"=data_parameters))
 }
 
-
 #####################################################################
 #covariate matrix
 make_covariate_matrix <- function(locations){
@@ -244,14 +243,17 @@ make_covariate_matrix <- function(locations){
   msl_raster <- raster(paste0(path,"/../Data/msl.nc"))
   tide_raster <- raster(paste0(path,"/../Data/tide.nc"))
   
-  location_data_u10 <- raster::extract(u10_raster, cbind(locations$longitude,
-                                                         locations$latitude))
-  location_data_v10 <- raster::extract(v10_raster, cbind(locations$longitude,
-                                                         locations$latitude))
-  location_data_msl <- raster::extract(msl_raster, cbind(locations$longitude,
-                                                         locations$latitude))
-  location_data_tide <- raster::extract(tide_raster, cbind(locations$longitude,
-                                                           locations$latitude))
+  latitude_name <- {if(is.element("lat",names(locations))) "lat" else "latitude"}
+  longitude_name <- {if(is.element("long",names(locations))) "long" else "longitude"}
+  
+  location_data_u10 <- raster::extract(u10_raster, cbind(get(longitude_name, locations),
+                                                         get(latitude_name, locations)))
+  location_data_v10 <- raster::extract(v10_raster, cbind(get(longitude_name, locations),
+                                                         get(latitude_name, locations)))
+  location_data_msl <- raster::extract(msl_raster, cbind(get(longitude_name, locations),
+                                                         get(latitude_name, locations)))
+  location_data_tide <- raster::extract(tide_raster, cbind(get(longitude_name, locations),
+                                                           get(latitude_name, locations)))
   
   #covariate matrix
   dim <- nrow(locations)
@@ -273,8 +275,6 @@ find_distances <- function(locations){
   #input: data frame with longitude and latitude as columns
   #output: distance matrix
   ###################################################################
-  names(locations)
-  names(simulated_locations)
   latitude_name <- {if(is.element("lat",names(locations))) "lat" else "latitude"}
   longitude_name <- {if(is.element("long",names(locations))) "long" else "longitude"}
   
