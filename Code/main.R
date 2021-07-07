@@ -82,6 +82,9 @@ source(paste0(path,"/return_levels.R"))
 #Spatial maps of return levels
 source(paste0(path,"/map.R"))
 
+#Additional plots
+source(paste0(path,"/plots.R"))
+
 
 #Stan files:
 #reparametrized_GEV.stan                    #Parameter estimation for the multivariate/spatial model
@@ -90,10 +93,9 @@ source(paste0(path,"/map.R"))
 
 
 #Other files:
-#source(paste0(path,"/covariate_data.R"))   #Preparation of the covariate data for analysis
-#source(paste0(path,"/norwegian_coast.R"))  #Preparation of GPS coordinates for the Oslo Fjord
-#source(paste0(path,"/plots.R"))            #Plots
-#source(paste0(path,"/print_results.R"))    #Prints out some useful information used in the thesis
+# source(paste0(path,"/covariate_data.R"))   #Preparation of the covariate data for analysis
+# source(paste0(path,"/norwegian_coast.R"))  #Preparation of GPS coordinates for the Oslo Fjord
+# source(paste0(path,"/print_results.R"))    #Prints out some useful information used in the thesis
 
 
 
