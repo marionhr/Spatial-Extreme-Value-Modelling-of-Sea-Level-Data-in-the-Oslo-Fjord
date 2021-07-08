@@ -45,6 +45,8 @@ library(rgdal) # package for geospatial analysis
 library(ggrepel)
 library(fields)
 library(colorRamps)
+library(XML)
+library(methods)
 
 #Stan libraries
 library("rstan") # observe startup messages
@@ -100,7 +102,7 @@ source(paste0(path,"/plots.R"))
 
 
 #Install Packages:
-#install.packages(c("tidyverse","ggplot2","forecast","ggpubr","mev","ismev","extRemes","lubridate","nleqslv","latex2exp","scales","matlib","evd","hexbin","spatstat","patchwork","mvtnorm","copula","evd","dplyr","geosphere","geoR","sf","sp","scoringRules","fhidata","robustbase","raster","rgdal","purrr","gridExtra","patchwork","geoR","Rfast","ncdf4","raster","rgdal ","ggrepel","fields"))
+#install.packages(c("tidyverse","ggplot2","forecast","ggpubr","mev","ismev","extRemes","lubridate","nleqslv","latex2exp","scales","matlib","evd","hexbin","spatstat","patchwork","mvtnorm","copula","evd","dplyr","geosphere","geoR","sf","sp","scoringRules","fhidata","robustbase","raster","rgdal","purrr","gridExtra","patchwork","geoR","Rfast","ncdf4","raster","rgdal ","ggrepel","fields","XML","methods"))
 
 #Stan:
 #Sys.setenv(DOWNLOAD_STATIC_LIBV8 = 1) # only necessary for Linux without the nodejs library / headers

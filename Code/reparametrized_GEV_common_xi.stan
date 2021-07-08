@@ -2,6 +2,12 @@ functions {
   // Define gev density function
 
   real gev_lpdf(real y, real mu, real lnsigma, real xi) {
+    //input:
+    //y: data
+    //mu, lnsigma, xi: parameters of GEV
+    //output:
+    //log of the GEV probability distribution function
+    
     if (1+xi*(y-mu)/exp(lnsigma) <= 0)
       reject("the gev function does not exist for the parameters");
     if (xi!=0)
@@ -11,6 +17,14 @@ functions {
   }
   
   real gev_vec_lpdf(vector y, vector mu, vector lnsigma, real xi, int N){
+    //input:
+    //y: data
+    //mu, lnsigma, xi: parameters of GEV
+    //N: length of data vector
+    //output:
+    //sum over the data of the log of the GEV probability distribution function
+    //equals: log of the product over data of the GEV probability distribution function
+    
     vector[N] ret;
     for (i in 1:N){
       ret[i]=gev_lpdf(y[i] | mu[i], lnsigma[i], xi);
@@ -19,14 +33,21 @@ functions {
   }
   
   real l_xi(real x, real xi){
+    //used in reparametrization
     return (-log(x))^(-xi);
   }
   
   real l(real x){
+    //used in reparametrization
     return log(-log(x));
   }
   
   matrix reparametrization(vector q_alpha, vector lns_beta, real xi, real alpha, real beta, int dim){
+    //input:
+    //q_alpha, lns_beta: quantile based parameters of the GEV
+    //xi: parameter of the GEV
+    //alpha: quantile related to q
+    //beta: quantile related to 
     vector[dim] mu;
     vector[dim] lnsigma;
     matrix[dim, 2] ret;

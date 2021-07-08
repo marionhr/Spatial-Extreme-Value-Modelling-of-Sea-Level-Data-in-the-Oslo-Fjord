@@ -1,6 +1,7 @@
-Code/.Rproj.user/
-Code/.RDataTmp
-Code/Rproj
+.Rproj.user/
+.RDataTmp
+Rproj
 .RHistory
 .RData
 .Rproj.user
+.Rprofile

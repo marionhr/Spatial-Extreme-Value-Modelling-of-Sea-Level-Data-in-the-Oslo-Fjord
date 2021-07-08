@@ -1,7 +1,16 @@
 #!/usr/bin/env Rscript
 
 
+#plot data with and without trend
 plot_data <- function(data, trend_data, location){
+  #input: 
+  #data: data frame without trend
+  #trend_data: data frame with trend
+  #location: name of location
+  #output:
+  #two plots
+  ###################################
+  
   #plot the data with trend
   trend_data_sub <- subset(trend_data, hour == 0)
   Plot_Trend <- ggplot(trend_data_sub,aes(x=date_to_year(trend_data_sub),y=sealevel))+
@@ -42,8 +51,9 @@ Helgeroa_plot$trend + Helgeroa_plot$stationary +
   ggsave(paste0("/../Plots/Data/all_locations.pdf"),
          path=path, width = 10, height = 15, units = c("in"))
 
+##################################################################################
 
-#Plot locations
+#Plot locations on a map
 ggplot() + 
   geom_polygon(data = fhidata::norway_map_counties, mapping = aes(x = long, y = lat, group = group, fill = hole), color = "black")+ 
   scale_fill_manual(values = c("white"))+
@@ -55,7 +65,9 @@ ggplot() +
   guides(fill=FALSE, size=FALSE)+
   ggsave(paste0(path, "/../Plots/Extra_Plots/Locations.pdf"), width = 5, height = 4, units = c("in"))
 
+##################################################################################
 
+#Plot yearly maximum data
 Helgeroa_yearly_max_plot <- ggplot(Helgeroa_yearly_max_data) + 
   geom_line(aes(year, yearly_max))+
   xlab("time (year)")+
@@ -86,8 +98,14 @@ Helgeroa_yearly_max_plot + Oscarsborg_yearly_max_plot +
   ggsave(paste0("/../Plots/Data/yearly_max_data.pdf"),
          path=path, width = 10, height = 8, units = c("in"))
   
+##################################################################################
 
+#plot dependence between the yearly maximum data for different locations
 spatial_dependence_plot <- function(yearly_max_data_1,yearly_max_data_2, loc1, loc2){
+  #input:
+  #yearly_max_data from two differnt locations
+  #loc: names of the locations
+  ##############################################
   data_1 <- yearly_max_data_1$yearly_max[is.element(yearly_max_data_1$year, yearly_max_data_2$year)]
   data_2 <- yearly_max_data_2$yearly_max[is.element(yearly_max_data_2$year, yearly_max_data_1$year)]
   plt <- ggplot()+
@@ -112,13 +130,10 @@ p1 + p2 + p3 + p4 + p5 + p6 +
   ggsave(paste0("/../Plots/Data/spatial_dependence_plot.pdf"),
          path=path, width = 10, height = 8, units = c("in"))
 
+##################################################################################
 
-library("XML")
+#Plot all the permanent stations
 
-# Also load the other required package.
-library("methods")
-
-# Give the input file name to the function.
 result <- xmlParse(paste0(path,"/../Data/permanente_stasjoner.xml"))
 xml_data <- xmlToList(result)
 xml_data$stationinfo$location[["name"]]
@@ -132,6 +147,7 @@ extract_xml_data <- function(index){
 
 station_info <- mapply(extract_xml_data, 1:24)
 station_info <- t(station_info)
+#rename locations with Norwegian letters
 station_info[3,1] <- "Bodø"
 station_info[6,1] <- "Heimsjø"
 station_info[8,1] <- "Honningsvåg"
@@ -158,7 +174,6 @@ ggplot() +
   scale_fill_manual(values = c("white"))+
   theme_void()+ 
   coord_quickmap() + 
-  #coord_cartesian(xlim=c(4,30)) +
   geom_point(aes(x=station_info$longitude, y=station_info$latitude), color="red")+
   geom_text(aes(x=station_info$longitude, y=station_info$latitude, label=station_info$name), 
             hjust=hjust_perm, 
@@ -167,9 +182,9 @@ ggplot() +
   guides(fill=FALSE, size=FALSE)+
   ggsave(paste0(path, "/../Plots/Extra_Plots/permanent_stations.pdf"), width = 10, height = 8, units = c("in"))
 
+##################################################################################
 
-
-#plot priors
+#plot the priors
 ggplot()+
   geom_line(aes(x=seq(0,10,0.01),y=dgamma(seq(0,10,0.01),5/4,1/4)))+
   xlab(expression(tau))+
@@ -198,8 +213,9 @@ ggplot()+
   ggsave(paste0("/../Plots/Extra_Plots/prior_xi.pdf"), 
          path=path, width = 5, height = 3, units = c("in"))
 
+##################################################################################
 
-#plot correlation function
+#plot the correlation function
 nu<- 1
 dist <- seq(0,200)
 
