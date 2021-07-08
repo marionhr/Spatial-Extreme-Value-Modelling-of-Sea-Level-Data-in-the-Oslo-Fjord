@@ -47,7 +47,11 @@ functions {
     //q_alpha, lns_beta: quantile based parameters of the GEV
     //xi: parameter of the GEV
     //alpha: quantile related to q
-    //beta: quantile related to 
+    //beta: quantile related to lns
+    //dim: length of parameter vectors
+    //output:
+    //GEV parameters mu and sigma
+    
     vector[dim] mu;
     vector[dim] lnsigma;
     matrix[dim, 2] ret;

@@ -9,7 +9,8 @@ msl_brick
 tide_raster <- raster(paste0(path,"/../../Data/LAT_Oslofjorden.nc"), varname="height")
 tide_raster
 
-#find mean_annual_max/min for entire fields for u10/v10/msl
+#need to find mean_annual_max/min for entire fields for u10/v10/msl
+
 #extract the data
 data_matrix <- rasterToPoints(u10_brick$X2020.12.31.23.00.00)
 coordinates <- data_matrix[,1:2]
@@ -38,7 +39,7 @@ data_msl <- as.data.frame(t(data_msl))
 data_msl$year <- rep(years, days_in_year)
 data_msl
 
-#study the data
+#find mean annual maximum/minimum
 years <- seq(1950,2020)
 
 annual_maximum_u10 <- matrix(NA, nrow=length(years),ncol=66+1)
