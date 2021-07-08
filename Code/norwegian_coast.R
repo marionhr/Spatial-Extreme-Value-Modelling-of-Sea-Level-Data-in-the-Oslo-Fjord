@@ -32,7 +32,7 @@ colnames(all_distances) <- seq(1:nrow(all_distances))
 
 #sort data by distance
 list_of_indexes_added <- c(1:4)
-while(length(list_of_indexes_added)<nrow(norwegian_coast_data)+4){
+while(length(list_of_indexes_added)<nrow(norwegian_coast_data)+4-1){
   new_index <- which.max(rowMins(all_distances[-c(list_of_indexes_added),list_of_indexes_added],TRUE))
   new_index <- as.numeric(rownames(all_distances[-c(list_of_indexes_added),list_of_indexes_added])[new_index])
   list_of_indexes_added <- c(list_of_indexes_added,new_index)
@@ -40,10 +40,7 @@ while(length(list_of_indexes_added)<nrow(norwegian_coast_data)+4){
     print(which(duplicated(list_of_indexes_added)))
   }
 }
-list_of_indexes_added
-length(list_of_indexes_added)
-nrow(norwegian_coast_data)
-nrow(sorted_norwegian_coast_data)
 
+#save results
 sorted_norwegian_coast_data <- norwegian_coast_data[(list_of_indexes_added[-c(1:4)]-4),]
 write.table(sorted_norwegian_coast_data, file=paste0(path,"/../Data/sorted_norwegian_south_coast_data.txt"))
