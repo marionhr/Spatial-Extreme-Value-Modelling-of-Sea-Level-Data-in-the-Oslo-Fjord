@@ -2,7 +2,7 @@
 
 Code for master thesis by Marion Helen Røed
 
-To run the code open Spatial-Extreme-Value-Modelling-of-Sea-Level-Data-in-the-Oslo-Fjord.Rproj.\
+To run the code open the main.R file.\
 The main file contains all the necessary code files.\
 The path needs to be changed.\
 The files functions.R and data.R should always be run first.\
