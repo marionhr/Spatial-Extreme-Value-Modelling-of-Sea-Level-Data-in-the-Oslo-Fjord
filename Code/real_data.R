@@ -111,13 +111,22 @@ data_set <- data[c((data_parameters$dim*2+1):(data_parameters$dim*2+5+2*data_par
 data_set <- as.data.frame(data_set)
 parameter_names <- names(data_set)
 
+#names for x label in the plots
+plot_names <- list(expression(xi),expression(paste(beta[q.1])),expression(paste(beta[q.2])),
+                expression(paste(beta[q.3])),expression(paste(beta[q.4])),expression(paste(beta[q.5])),
+                expression(paste(tau[q])),expression(paste(rho[q])),expression(paste(beta[lns.1])),
+                expression(paste(beta[lns.2])),expression(paste(beta[lns.3])),expression(paste(beta[lns.4])),
+                expression(paste(beta[lns.5])),expression(paste(tau[lns])),expression(paste(rho[lns])))
+names(plot_names) <- parameter_names
+
+
 #priors
 x_values_prior <- find_x_values_prior(data)
 y_values_prior <- mapply(prior_plot_func, parameter_names, MoreArgs = list(x_values_prior))
 x_values_prior$xi <- data_parameters$xi_limits[1]+(data_parameters$xi_limits[2]-data_parameters$xi_limits[1])*exp(x_values_prior$xi)/(1+exp(x_values_prior$xi))
 
 #plot histograms of the parameters
-plots <- map(parameter_names, ~histogram_of_results(data_set, .x, prior_x=x_values_prior, prior_y=y_values_prior))
+plots <- map(parameter_names, ~histogram_of_results(data_set, .x, plot_names, prior_x=x_values_prior, prior_y=y_values_prior))
 ggarrange(plotlist=plots[1], ncol=1, nrow = 1)+
   ggsave(paste0(path, "/../Plots/Real_Data/hist_with_real_xi.pdf"),
          width = 10*1/4, height = 8*1/4, units = c("in"))
@@ -133,7 +142,11 @@ data_set <- data[c(1:data_parameters$dim)]
 data_set <- as.data.frame(data_set)
 names(data_set) <- paste0("q.",locations$location)
 
-plots <- map(names(data_set), ~histogram_of_results(data_set, .x))
+#names for x label in the plots
+plot_names <- list(expression(q.Helgeroa),expression(q.Oscarsborg),expression(q.Oslo),expression(q.Viker))
+names(plot_names) <- names(data_set)
+
+plots <- map(names(data_set), ~histogram_of_results(data_set, .x, plot_names))
 ggarrange(plotlist=plots, ncol=4, nrow = ceiling(length(plots)/4))+
   ggsave(paste0(path, "/../Plots/Real_Data/hist_q.pdf"),
          width = 10, height = 8*ceiling(length(plots)/4)/4, units = c("in"))
@@ -143,7 +156,11 @@ data_set <- data[c((1+data_parameters$dim):(data_parameters$dim*2))]
 data_set <- as.data.frame(data_set)
 names(data_set) <- paste0("lns.",locations$location)
 
-plots <- map(names(data_set), ~histogram_of_results(data_set, .x))
+#names for x label in the plots
+plot_names <- list(expression(lns.Helgeroa),expression(lns.Oscarsborg),expression(lns.Oslo),expression(lns.Viker))
+names(plot_names) <- names(data_set)
+
+plots <- map(names(data_set), ~histogram_of_results(data_set, .x, plot_names))
 ggarrange(plotlist=plots, ncol=4, nrow = ceiling(length(plots)/4))+
   ggsave(paste0(path, "/../Plots/Real_Data/hist_lns.pdf"),
          width = 10, height = 8*ceiling(length(plots)/4)/4, units = c("in"))

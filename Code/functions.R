@@ -68,56 +68,56 @@ create_corr_mat <- function(distance_matrix, range, nu) {
 #name: list of parameter names to make plots for
 #prior_x + prior_y: the prior distributions to compare the histograms to
 
-histogram_of_results <- function(data, name, value=NA, prior_x=NA, prior_y=NA){
+histogram_of_results <- function(data, name, plot_names, value=NA, prior_x=NA, prior_y=NA){
   #function for "function overloading", 
   #one can call this function to run all possible options of histogram functions
   ##############################################################################
   if (is.na(value)){
     if(is.na(prior_x)){
-      return(hist_plot_no_real_value(data,name))
+      return(hist_plot_no_real_value(data,name, plot_names))
     }else{
-      return(hist_plot_no_real_value_with_priors(data, name, prior_x, prior_y))
+      return(hist_plot_no_real_value_with_priors(data, name, plot_names, prior_x, prior_y))
     }
   }else{
     if(is.na(prior_x)){
-      return(hist_plot(data, value, name))
+      return(hist_plot(data, value, name, plot_names))
     }else{
-      return(hist_plot_with_priors(data, value, name, prior_x, prior_y))
+      return(hist_plot_with_priors(data, value, name, plot_names, prior_x, prior_y))
     }
   }
 }
 
-hist_plot <- function(data, value, name){
+hist_plot <- function(data, value, name, plot_names){
   plt <- ggplot()+
     geom_histogram(aes(x=get(name, data),y=..density..))+
     geom_vline(aes(xintercept = get(name, value)))+
-    xlab(name)+
+    xlab(get(name,plot_names))+
     xlim(c(max(min(get(name,data)),-10^4),min(max(get(name,data)),10^4)))
   return(plt)
 }
 
-hist_plot_no_real_value <- function(data, name){
+hist_plot_no_real_value <- function(data, name, plot_names){
   plt <- ggplot()+
     geom_histogram(aes(x=get(name, data),y=..density..))+
-    xlab(name)+
+    xlab(get(name,plot_names))+
     xlim(c(max(min(get(name,data)),-10^4),min(max(get(name,data)),10^4)))
   return(plt)
 }
 
-hist_plot_with_priors <- function(data, value, name, prior_x, prior_y){
+hist_plot_with_priors <- function(data, value, name, plot_names, prior_x, prior_y){
   plt <- ggplot()+
     geom_histogram(aes(x=get(name, data),y=..density..))+
     geom_vline(aes(xintercept = get(name, value)))+
     geom_line(aes(x=get(name,prior_x), y=get(name, prior_y)))+
-    xlab(name)
+    xlab(get(name,plot_names))
   return(plt)
 }
 
-hist_plot_no_real_value_with_priors <- function(data, name, prior_x, prior_y){
+hist_plot_no_real_value_with_priors <- function(data, name, plot_names, prior_x, prior_y){
   plt <- ggplot()+
     geom_histogram(aes(x=get(name, data),y=..density..))+
     geom_line(aes(x=get(name,prior_x), y=get(name, prior_y)))+
-    xlab(name)
+    xlab(get(name,plot_names))
   return(plt)
 }
 

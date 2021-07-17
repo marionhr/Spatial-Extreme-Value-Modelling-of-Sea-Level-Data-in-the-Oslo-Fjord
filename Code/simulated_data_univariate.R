@@ -108,8 +108,13 @@ load_simulated_results_function <- function(station_number){
   names(prior_x) <- parameter_names
   names(prior_y) <- parameter_names
   
+  #names for x label in the plots
+  plot_names <- list(bquote(xi ~"."~ .(station_number)),paste0("q.",station_number),paste0("lns.",station_number))
+  names(plot_names) <- parameter_names
+  
+  
   #plot histograms
-  plots <- map(parameter_names, ~hist_plot_with_priors(data, data_original_parameters, .x, prior_x, prior_y))
+  plots <- map(parameter_names, ~hist_plot_with_priors(data, data_original_parameters, .x, plot_names, prior_x, prior_y))
   return(plots)
 }
 
@@ -120,10 +125,10 @@ univariate_simulated_data(3)
 univariate_simulated_data(4)
 
 #make plots
-plots1 <- load_results_function(1)
-plots2 <- load_results_function(2)
-plots3 <- load_results_function(3)
-plots4 <- load_results_function(4)
+plots1 <- load_simulated_results_function(1)
+plots2 <- load_simulated_results_function(2)
+plots3 <- load_simulated_results_function(3)
+plots4 <- load_simulated_results_function(4)
 
 plots <- c(plots1,plots2,plots3,plots4)
 ggarrange(plotlist=plots[c(1,4,7,10)],ncol=4,nrow=1)+

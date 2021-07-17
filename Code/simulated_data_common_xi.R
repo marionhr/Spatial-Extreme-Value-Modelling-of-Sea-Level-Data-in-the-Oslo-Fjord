@@ -105,8 +105,14 @@ parameter_set <-  setNames(c(data_original_parameters$q_alpha,
                              data_original_parameters$xi),
                            parameter_names)
 
+#names for x label in the plots
+plot_names <- list(expression(q.1),expression(q.2),expression(q.3),expression(q.4),
+                   expression(lns.1),expression(lns.2),expression(lns.3),expression(lns.4),
+                   expression(xi))
+names(plot_names) <- parameter_names
+
 #plot histograms
-plots <- map(parameter_names, ~hist_plot_with_priors(data, as.data.frame(t(parameter_set)), .x, prior_x, prior_y))
+plots <- map(parameter_names, ~hist_plot_with_priors(data, as.data.frame(t(parameter_set)), .x, plot_names, prior_x, prior_y))
 ggarrange(plotlist=plots[9], ncol=1, nrow = 1)+
   ggsave(paste0(path, "/../Plots/Simulated_Data_common_xi/hist_with_real_xi.pdf"),
          width = 10*1/4, height = 8*1/4, units = c("in"))

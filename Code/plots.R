@@ -49,11 +49,12 @@ Helgeroa_plot$trend + Helgeroa_plot$stationary +
   plot_layout(ncol=2, guides = "collect") &
   theme(legend.position = "bottom") &
   ggsave(paste0("/../Plots/Data/all_locations.pdf"),
-         path=path, width = 10, height = 15, units = c("in"))
+         path=path, width = 8, height = 10, units = c("in"))
 
 ##################################################################################
 
 #Plot locations on a map
+
 ggplot() + 
   geom_polygon(data = fhidata::norway_map_counties, mapping = aes(x = long, y = lat, group = group, fill = hole), color = "black")+ 
   scale_fill_manual(values = c("white"))+
@@ -61,9 +62,10 @@ ggplot() +
   coord_quickmap() + 
   coord_cartesian(xlim=c(9,12),ylim=c(58.8,60)) +
   geom_point(aes(x=locations$long, y=locations$lat), color="red")+
-  geom_text(aes(x=locations$long, y=locations$lat, label=locations$location),hjust=-.1, vjust=1.5, color="red") + 
+  geom_label_repel(aes(x=locations$long, y=locations$lat, label=locations$location), color="red", max.overlaps = 15) + 
   guides(fill=FALSE, size=FALSE)+
   ggsave(paste0(path, "/../Plots/Extra_Plots/Locations.pdf"), width = 5, height = 4, units = c("in"))
+
 
 ##################################################################################
 
@@ -96,7 +98,7 @@ Helgeroa_yearly_max_plot + Oscarsborg_yearly_max_plot +
   plot_layout(ncol=2, guides = "collect") &
   theme(legend.position = "bottom") &
   ggsave(paste0("/../Plots/Data/yearly_max_data.pdf"),
-         path=path, width = 10, height = 8, units = c("in"))
+         path=path, width = 8, height = 6, units = c("in"))
   
 ##################################################################################
 
@@ -161,26 +163,27 @@ station_info[24,1] <- "Ålesund"
 station_info <- as.data.frame(station_info)
 station_info$latitude <- as.numeric(station_info$latitude)
 station_info$longitude <- as.numeric(station_info$longitude)
-station_info
+station_info$name <- as.character(t(station_info$name))
+station_info <- station_info[!(station_info$name=="NA"),]
 
 #Plot all stations
-hjust_perm <- rep(0.6,24)
-vjust_perm <- rep(-0.5,24)
-hjust_perm[23] <- -0.1
-hjust_perm[21] <- -0.05
+hjust_perm <- rep(0.6,length(station_info$name))
+vjust_perm <- rep(-0.5,length(station_info$name))
+hjust_perm[22] <- -0.1
+hjust_perm[20] <- -0.05
 
 ggplot() + 
-  geom_polygon(data = fhidata::norway_map_counties, mapping = aes(x = long, y = lat, group = group, fill = hole), color = "black")+ 
+  geom_polygon(data = fhidata::norway_map_counties, mapping = aes(x = long, y = lat, group = group, fill = hole), color = "darkgrey")+ 
   scale_fill_manual(values = c("white"))+
   theme_void()+ 
   coord_quickmap() + 
-  geom_point(aes(x=station_info$longitude, y=station_info$latitude), color="red")+
-  geom_text(aes(x=station_info$longitude, y=station_info$latitude, label=station_info$name), 
-            hjust=hjust_perm, 
-            vjust=vjust_perm, 
-            color="red") + 
-  guides(fill=FALSE, size=FALSE)+
+  geom_point(data=station_info, aes(x=longitude, y=latitude),color="green4")+
+  geom_text(data=station_info, aes(x=longitude, y=latitude, label=name), color="green4",hjust=hjust_perm, vjust=vjust_perm) + 
+  guides(fill=FALSE)+
   ggsave(paste0(path, "/../Plots/Extra_Plots/permanent_stations.pdf"), width = 10, height = 8, units = c("in"))
+
+ggplot()+
+  geom_point(aes(x=1:3,y=1:3,colour=c("a","b","c")))
 
 ##################################################################################
 

@@ -140,8 +140,17 @@ if (different_prior==TRUE){
 
 x_values_prior$xi <- data_parameters$xi_limits[1]+(data_parameters$xi_limits[2]-data_parameters$xi_limits[1])*exp(x_values_prior$xi)/(1+exp(x_values_prior$xi))
 
+#names for x label in the plots
+plot_names <- list(expression(xi),expression(paste(beta[q.1])),expression(paste(beta[q.2])),
+                   expression(paste(beta[q.3])),expression(paste(beta[q.4])),expression(paste(beta[q.5])),
+                   expression(paste(tau[q])),expression(paste(rho[q])),expression(paste(beta[lns.1])),
+                   expression(paste(beta[lns.2])),expression(paste(beta[lns.3])),expression(paste(beta[lns.4])),
+                   expression(paste(beta[lns.5])),expression(paste(tau[lns])),expression(paste(rho[lns])))
+names(plot_names) <- parameter_names
+
+
 #plot histograms of the parameters
-plots <- map(parameter_names, ~hist_plot_with_priors(data_set, as.data.frame(t(parameter_set)), .x, x_values_prior, y_values_prior))
+plots <- map(parameter_names, ~hist_plot_with_priors(data_set, as.data.frame(t(parameter_set)), .x, plot_names, x_values_prior, y_values_prior))
 ggarrange(plotlist=plots[1], ncol=1, nrow = 1)+
   ggsave(paste0(path, "/../Plots/",save_in_repository,"/hist_with_real_xi.pdf"),
          width = 10/4, height = 8*1/4, units = c("in"))
@@ -158,7 +167,11 @@ data_set <- data[1:(data_parameters$dim)]
 parameter_set <- as.data.frame(data_original_parameters$q_alpha)
 names(parameter_set) <- parameter_names
 
-plots <- map(parameter_names, ~hist_plot(data_set, parameter_set, .x))
+#names for x label in the plots
+plot_names <- as.data.frame(t(paste0("q.",1:dim)))
+names(plot_names) <- parameter_names
+
+plots <- map(parameter_names, ~hist_plot(data_set, parameter_set, .x, plot_names))
 ggarrange(plotlist=plots, ncol=4, nrow = ceiling(length(plots)/4))+
   ggsave(paste0(path, "/../Plots/",save_in_repository,"/hist_parameters_q.pdf"),
          width = 10, height = 8*ceiling(length(plots)/4)/4, units = c("in"))
@@ -169,7 +182,11 @@ data_set <- data[(data_parameters$dim+1):(data_parameters$dim*2)]
 parameter_set <- as.data.frame(data_original_parameters$lns_beta)
 names(parameter_set) <- parameter_names
 
-plots <- map(parameter_names, ~hist_plot(data_set, parameter_set, .x))
+#names for x label in the plots
+plot_names <- as.data.frame(t(paste0("lns.",1:dim)))
+names(plot_names) <- parameter_names
+
+plots <- map(parameter_names, ~hist_plot(data_set, parameter_set, .x, plot_names))
 ggarrange(plotlist=plots, ncol=4, nrow = ceiling(length(plots)/4))+
   ggsave(paste0(path, "/../Plots/",save_in_repository,"/hist_parameters_lns.pdf"),
          width = 10, height = 8*ceiling(length(plots)/4)/4, units = c("in"))

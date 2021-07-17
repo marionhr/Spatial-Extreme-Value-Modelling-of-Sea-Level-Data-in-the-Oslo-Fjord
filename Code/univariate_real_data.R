@@ -103,8 +103,12 @@ load_real_results_function <- function(location_name){
   names(prior_x) <- parameter_names
   names(prior_y) <- parameter_names
   
+  #names for x label in the plots
+  plot_names <- list(paste0("q.",location_name),paste0("lns.",location_name),bquote(xi ~"."~ .(location_name)))
+  names(plot_names) <- parameter_names
+  
   #plot histograms
-  plots <- map(parameter_names, ~histogram_of_results(data, .x, prior_x=prior_x, prior_y=prior_y))
+  plots <- map(parameter_names, ~histogram_of_results(data, .x, plot_names, prior_x=prior_x, prior_y=prior_y))
   ggarrange(plotlist=plots)+
     ggsave(paste0(path, "/../Plots/Univariate_real_Data_",location_name,"/hist_with_real.pdf"),
            width = 5, height = 4, units = c("in"))

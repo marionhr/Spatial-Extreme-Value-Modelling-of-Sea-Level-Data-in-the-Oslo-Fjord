@@ -103,10 +103,16 @@ prior_x$xi <- data_parameters$xi_limits[1]+(data_parameters$xi_limits[2]-data_pa
 parameter_names <- c(paste0("q.",c("Helgeroa","Oscarsborg","Oslo","Viker")),paste0("lns.",c("Helgeroa","Oscarsborg","Oslo","Viker")),"xi")
 names(data) <- parameter_names
 names(prior_x) <- parameter_names
-names(prior_y) <- parameter_names
+names(prior_y) <- parameter_names 
+
+#names for x label in the plots
+plot_names <- list(expression(q.Helgeroa),expression(q.Oscarsborg),expression(q.Oslo),expression(q.Viker),
+                   expression(lns.Helgeroa),expression(lns.Oscarsborg),expression(lns.Oslo),expression(lns.Viker),
+                   expression(xi))
+names(plot_names) <- parameter_names
 
 #plot histograms
-plots <- map(parameter_names, ~histogram_of_results(data, .x, prior_x=prior_x, prior_y=prior_y))
+plots <- map(parameter_names, ~histogram_of_results(data, .x, plot_names, prior_x=prior_x, prior_y=prior_y))
 ggarrange(plotlist=plots[9], ncol=1, nrow = 1)+
   ggsave(paste0(path, "/../Plots/Real_Data_common_xi/hist_with_real_xi.pdf"),
          width = 10*1/4, height = 8*1/4, units = c("in"))
